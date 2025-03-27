@@ -1,6 +1,10 @@
 package mk.ukim.finki.wp.emtlab.model.dto;
 
 import lombok.Data;
+import mk.ukim.finki.wp.emtlab.model.Guest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class HostDto {
@@ -9,6 +13,7 @@ public class HostDto {
     private String name;
     private String surname;
     private Long country;
+    private List<Guest> guests;
 
     public HostDto() {
     }
@@ -17,6 +22,11 @@ public class HostDto {
         this.name = name;
         this.surname = surname;
         this.country = country;
+        guests = new ArrayList<>();
+    }
+
+    public List<Guest> getGuests() {
+        return guests;
     }
 
     public String getName() {

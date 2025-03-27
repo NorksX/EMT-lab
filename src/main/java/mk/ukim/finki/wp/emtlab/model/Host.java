@@ -1,8 +1,12 @@
 package mk.ukim.finki.wp.emtlab.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,6 +23,15 @@ public class Host {
     @ManyToOne
     private Country country;
 
+    @ManyToMany
+    @JoinTable(
+            name="host_guests",
+            joinColumns = @JoinColumn(name = "host_id"),
+            inverseJoinColumns = @JoinColumn(name= "guest_id")
+            )
+    @JsonIgnore
+    private List<Guest> guests;
+
     public Host() {
     }
 
@@ -26,7 +39,9 @@ public class Host {
         this.name = name;
         this.surname = surname;
         this.country = country;
+        guests = new ArrayList<>();
     }
+
 
     public Long getId() {
         return id;
@@ -54,5 +69,14 @@ public class Host {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public List<Guest> getGuests() {
+        return guests;
+    }
+
+    public void addGuest(Guest guest)
+    {
+        guests.add(guest);
     }
 }
