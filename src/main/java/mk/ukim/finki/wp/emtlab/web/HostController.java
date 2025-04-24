@@ -1,8 +1,9 @@
 package mk.ukim.finki.wp.emtlab.web;
 
-import mk.ukim.finki.wp.emtlab.model.Host;
-import mk.ukim.finki.wp.emtlab.model.dto.HostDto;
-import mk.ukim.finki.wp.emtlab.service.HostService;
+import mk.ukim.finki.wp.emtlab.dto.CreateHostDto;
+import mk.ukim.finki.wp.emtlab.dto.DisplayHostDto;
+import mk.ukim.finki.wp.emtlab.model.domain.Host;
+import mk.ukim.finki.wp.emtlab.service.application.HostApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,53 +12,46 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/host")
 public class HostController {
+    private final HostApplicationService hostApplicationService;
 
-    private final HostService hostService;
-
-    public HostController(HostService hostService) {
-        this.hostService = hostService;
+    public HostController(HostApplicationService hostApplicationService) {
+        this.hostApplicationService = hostApplicationService;
     }
 
+
     @GetMapping
-    public List<Host> findAll() {
-        return hostService.findAll();
+    public List<DisplayHostDto> findAll() {
+        return hostApplicationService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Host> findById(@PathVariable Long id){
-        return hostService.findById(id)
-                .map(c -> ResponseEntity.ok().body(c))
+    public ResponseEntity<DisplayHostDto> findById(@PathVariable Long id) {
+        return hostApplicationService.findById(id)
+                .map(h -> ResponseEntity.ok().body(h))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Host> save(@RequestBody HostDto host)
-    {
-        return hostService.save(new HostDto(host.getName(), host.getSurname(), host.getCountry()))
-                .map(c -> ResponseEntity.ok().body(c))
+    public ResponseEntity<DisplayHostDto> save(@RequestBody CreateHostDto host) {
+        return hostApplicationService.save(host)
+                .map(h -> ResponseEntity.ok().body(h))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Host> update(@PathVariable Long id, @RequestBody HostDto host)
-    {
-        return hostService.update(id, new HostDto(host.getName(), host.getSurname(), host.getCountry()))
+    public ResponseEntity<DisplayHostDto> update(@PathVariable Long id, @RequestBody CreateHostDto host) {
+        return hostApplicationService.update(id, host)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id)
-    {
-        if (hostService.findById(id).isPresent())
-        {
-            hostService.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        if (hostApplicationService.findById(id).isPresent()) {
+            hostApplicationService.deleteById(id);
             return ResponseEntity.noContent().build();
-        } else
-        {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 }
