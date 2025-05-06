@@ -2,6 +2,7 @@ package mk.ukim.finki.wp.emtlab.service.application;
 
 import mk.ukim.finki.wp.emtlab.dto.CreateUserDto;
 import mk.ukim.finki.wp.emtlab.dto.DisplayUserDto;
+import mk.ukim.finki.wp.emtlab.dto.LoginResponseDto;
 import mk.ukim.finki.wp.emtlab.dto.LoginUserDto;
 import mk.ukim.finki.wp.emtlab.model.domain.Accommodation;
 
@@ -12,7 +13,7 @@ public interface UserApplicationService {
 
     Optional<DisplayUserDto> register(CreateUserDto createUserDto);
 
-    Optional<DisplayUserDto> login(LoginUserDto loginUserDto);
+    Optional<LoginResponseDto> login(LoginUserDto loginUserDto);
 
     Optional<DisplayUserDto> findByUsername(String username);
 

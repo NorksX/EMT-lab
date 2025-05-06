@@ -1,7 +1,9 @@
 package mk.ukim.finki.wp.emtlab.service.application.impl;
 
+import mk.ukim.finki.wp.emtlab.config.security.JwtHelper;
 import mk.ukim.finki.wp.emtlab.dto.CreateUserDto;
 import mk.ukim.finki.wp.emtlab.dto.DisplayUserDto;
+import mk.ukim.finki.wp.emtlab.dto.LoginResponseDto;
 import mk.ukim.finki.wp.emtlab.dto.LoginUserDto;
 import mk.ukim.finki.wp.emtlab.model.domain.User;
 import mk.ukim.finki.wp.emtlab.model.domain.Accommodation;
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class UserApplicationServiceImpl implements UserApplicationService {
 
     private final UserService userService;
+    private final JwtHelper jwtHelper;
 
-    public UserApplicationServiceImpl(UserService userService) {
+    public UserApplicationServiceImpl(UserService userService, JwtHelper jwtHelper) {
         this.userService = userService;
+        this.jwtHelper = jwtHelper;
     }
 
     @Override
@@ -35,11 +39,15 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public Optional<DisplayUserDto> login(LoginUserDto loginUserDto) {
-        return Optional.of(DisplayUserDto.from(userService.login(
-                loginUserDto.username(),
-                loginUserDto.password()
-        )));
+    public Optional<LoginResponseDto> login(LoginUserDto loginUserDto) {
+        User user = userService.login(
+                    loginUserDto.username(),
+                    loginUserDto.password()
+        );
+
+        String token = jwtHelper.generateToken(user);
+
+        return Optional.of(new LoginResponseDto(token));
     }
 
     @Override

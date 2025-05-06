@@ -32,7 +32,7 @@ public class DataInitializer {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void init()
     {
         Country country1 = countryRepository.save(new Country("Macedonia", "Europe"));
