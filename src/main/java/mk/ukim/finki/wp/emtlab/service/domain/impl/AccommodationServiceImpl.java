@@ -1,9 +1,13 @@
 package mk.ukim.finki.wp.emtlab.service.domain.impl;
 
+import mk.ukim.finki.wp.emtlab.dto.AccommodationDetailsDto;
 import mk.ukim.finki.wp.emtlab.dto.AccommodationTypeCountDTO;
 import mk.ukim.finki.wp.emtlab.model.domain.Accommodation;
 import mk.ukim.finki.wp.emtlab.model.enums.Category;
+import mk.ukim.finki.wp.emtlab.model.exceptions.AccommodationNotFoundException;
+import mk.ukim.finki.wp.emtlab.model.views.AccommodationsPerHostView;
 import mk.ukim.finki.wp.emtlab.repository.AccommodationRepository;
+import mk.ukim.finki.wp.emtlab.repository.AccommodationsPerHostRepository;
 import mk.ukim.finki.wp.emtlab.service.domain.AccommodationService;
 import mk.ukim.finki.wp.emtlab.service.domain.HostService;
 import org.springframework.stereotype.Service;
@@ -18,12 +22,23 @@ import java.util.stream.Collectors;
 public class AccommodationServiceImpl implements AccommodationService {
     private final AccommodationRepository accommodationRepository;
     private final HostService hostService;
+    private final AccommodationsPerHostRepository accommodationsPerHostRepository;
 
-    public AccommodationServiceImpl(AccommodationRepository accommodationRepository, HostService hostService) {
+    public AccommodationServiceImpl(AccommodationRepository accommodationRepository, HostService hostService, AccommodationsPerHostRepository accommodationsPerHostRepository) {
         this.accommodationRepository = accommodationRepository;
         this.hostService = hostService;
+        this.accommodationsPerHostRepository = accommodationsPerHostRepository;
     }
 
+    @Override
+    public void refreshMaterializedView() {
+        accommodationsPerHostRepository.refreshMaterializedView();
+    }
+
+    @Override
+    public List<AccommodationsPerHostView> findAllPerHost() {
+        return accommodationsPerHostRepository.findAll();
+    }
 
     @Override
     public List<Accommodation> findAll() {
@@ -80,4 +95,5 @@ public class AccommodationServiceImpl implements AccommodationService {
     public void deleteById(long id) {
         accommodationRepository.deleteById(id);
     }
+
 }

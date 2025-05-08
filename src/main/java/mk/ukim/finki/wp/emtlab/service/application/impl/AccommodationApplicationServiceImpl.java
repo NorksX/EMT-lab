@@ -1,8 +1,10 @@
 package mk.ukim.finki.wp.emtlab.service.application.impl;
 
+import mk.ukim.finki.wp.emtlab.dto.AccommodationDetailsDto;
 import mk.ukim.finki.wp.emtlab.dto.AccommodationTypeCountDTO;
 import mk.ukim.finki.wp.emtlab.dto.CreateAccommodationDto;
 import mk.ukim.finki.wp.emtlab.dto.DisplayAccommodationDto;
+import mk.ukim.finki.wp.emtlab.model.views.AccommodationsPerHostView;
 import mk.ukim.finki.wp.emtlab.service.application.AccommodationApplicationService;
 import mk.ukim.finki.wp.emtlab.service.domain.AccommodationService;
 import mk.ukim.finki.wp.emtlab.service.domain.HostService;
@@ -21,6 +23,11 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     public AccommodationApplicationServiceImpl(AccommodationService accommodationService, HostService hostService) {
         this.accommodationService = accommodationService;
         this.hostService = hostService;
+    }
+
+    @Override
+    public List<AccommodationsPerHostView> findAllPerHost() {
+        return accommodationService.findAllPerHost();
     }
 
     @Override
@@ -61,5 +68,10 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     @Override
     public void deleteById(long id) {
         accommodationService.deleteById(id);
+    }
+
+    @Override
+    public Optional<AccommodationDetailsDto> accommodationDetails(Long id) {
+        return accommodationService.findById(id).map(AccommodationDetailsDto::from);
     }
 }

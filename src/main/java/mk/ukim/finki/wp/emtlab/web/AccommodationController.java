@@ -3,16 +3,21 @@ package mk.ukim.finki.wp.emtlab.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import mk.ukim.finki.wp.emtlab.dto.AccommodationDetailsDto;
 import mk.ukim.finki.wp.emtlab.dto.AccommodationTypeCountDTO;
 import mk.ukim.finki.wp.emtlab.dto.CreateAccommodationDto;
 import mk.ukim.finki.wp.emtlab.dto.DisplayAccommodationDto;
 import mk.ukim.finki.wp.emtlab.model.domain.Accommodation;
+import mk.ukim.finki.wp.emtlab.model.views.AccommodationsPerHostView;
 import mk.ukim.finki.wp.emtlab.service.application.AccommodationApplicationService;
 import mk.ukim.finki.wp.emtlab.service.domain.AccommodationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/accommodation")
@@ -66,5 +71,17 @@ public class AccommodationController {
     @GetMapping("/count_by_category")
     public List<AccommodationTypeCountDTO> countByType() {
         return accommodationApplicationService.getAccommodationCountsByType();
+    }
+
+    @GetMapping("/by-host")
+    public ResponseEntity<List<AccommodationsPerHostView>> accommodationsPerHost(){
+        return ResponseEntity.ok().body(this.accommodationApplicationService.findAllPerHost());
+    }
+
+    @GetMapping("/details/{id}")
+    public ResponseEntity<AccommodationDetailsDto> getAccommodationDetails(@PathVariable Long id) {
+        return accommodationApplicationService.accommodationDetails(id)
+                .map(c -> ResponseEntity.ok().body(c))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

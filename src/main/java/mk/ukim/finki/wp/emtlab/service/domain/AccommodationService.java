@@ -1,7 +1,9 @@
 package mk.ukim.finki.wp.emtlab.service.domain;
 
+import mk.ukim.finki.wp.emtlab.dto.AccommodationDetailsDto;
 import mk.ukim.finki.wp.emtlab.dto.AccommodationTypeCountDTO;
 import mk.ukim.finki.wp.emtlab.model.domain.Accommodation;
+import mk.ukim.finki.wp.emtlab.model.views.AccommodationsPerHostView;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,5 +20,9 @@ public interface AccommodationService {
 
     List<AccommodationTypeCountDTO> getAccommodationCountsByType();
 
+    void refreshMaterializedView();
+
+    List<AccommodationsPerHostView> findAllPerHost();
     void deleteById(long id);
+
 }

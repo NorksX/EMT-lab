@@ -3,6 +3,8 @@ package mk.ukim.finki.wp.emtlab.web;
 import mk.ukim.finki.wp.emtlab.dto.CreateHostDto;
 import mk.ukim.finki.wp.emtlab.dto.DisplayHostDto;
 import mk.ukim.finki.wp.emtlab.model.domain.Host;
+import mk.ukim.finki.wp.emtlab.model.projections.HostProjection;
+import mk.ukim.finki.wp.emtlab.model.views.HostsPerCountryView;
 import mk.ukim.finki.wp.emtlab.service.application.HostApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,5 +55,14 @@ public class HostController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/names")
+    public ResponseEntity<List<HostProjection>> getNameAndSurnameOfHosts() {
+        return ResponseEntity.ok().body(hostApplicationService.takeNameAndSurnameByProjection());
+    }
+
+    @GetMapping("/by-contry")
+    public ResponseEntity<List<HostsPerCountryView>> hostsPerCountry() {
+        return ResponseEntity.ok().body(this.hostApplicationService.findAllPerCountry());
     }
 }

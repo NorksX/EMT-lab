@@ -2,6 +2,8 @@ package mk.ukim.finki.wp.emtlab.service.application.impl;
 
 import mk.ukim.finki.wp.emtlab.dto.CreateHostDto;
 import mk.ukim.finki.wp.emtlab.dto.DisplayHostDto;
+import mk.ukim.finki.wp.emtlab.model.projections.HostProjection;
+import mk.ukim.finki.wp.emtlab.model.views.HostsPerCountryView;
 import mk.ukim.finki.wp.emtlab.service.application.HostApplicationService;
 import mk.ukim.finki.wp.emtlab.service.domain.CountryService;
 import mk.ukim.finki.wp.emtlab.service.domain.HostService;
@@ -19,6 +21,16 @@ public class HostApplicationServiceImpl implements HostApplicationService {
     public HostApplicationServiceImpl(HostService hostService, CountryService countryService) {
         this.hostService = hostService;
         this.countryService = countryService;
+    }
+
+    @Override
+    public List<HostProjection> takeNameAndSurnameByProjection() {
+        return hostService.takeNameAndSurnameByProjection();
+    }
+
+    @Override
+    public List<HostsPerCountryView> findAllPerCountry() {
+        return hostService.findAllPerCountry();
     }
 
     @Override
